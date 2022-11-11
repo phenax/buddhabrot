@@ -25,12 +25,11 @@ const scale = {
 
 const MAX_ITERATIONS = 20;
 
-for (let i = 0; i < imageData.data.length; i += 4) {
-  imageData.data[i] = 200;
-  imageData.data[i + 1] = 50;
-  imageData.data[i + 2] = 50;
-  imageData.data[i + 3] = 0;
+const alphaChannelMap = new Map
+const getAlpha = (x, y) => alphaChannelMap.get(`${x}--${y}`) ?? 0
+const setAlpha = (x, y, a) => alphaChannelMap.set(`${x}--${y}`, a)
 
+for (let i = 0; i < imageData.data.length; i += 4) {
   const index = i / 4;
   const col = index % $canvas.width;
   const row = Math.floor(index / $canvas.height);
@@ -59,14 +58,11 @@ for (let i = 0; i < imageData.data.length; i += 4) {
       const col = Math.floor(z.x * scale.x + offset.x);
 
       if (row > 0 && col > 0 && row < $canvas.height && col < $canvas.width) {
-        const idx = 4 * (row * $canvas.width + col);
-        imageData.data[idx + 3] += 40;
+        const alpha = getAlpha(col, row) + 0.1
+        ctx.fillStyle = `rgba(200, 10, 0, ${alpha})`
+        ctx.fillRect(col, row, 1, 1)
+        setAlpha(row, col, alpha)
       }
     }
-  } else {
-    // imageData.data[i] = 200;
-    // imageData.data[i + 2] = 200;
   }
 }
-
-ctx.putImageData(imageData, 0, 0);
