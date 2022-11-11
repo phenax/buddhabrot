@@ -23,11 +23,13 @@ const scale = {
   y: $canvas.height / 3,
 };
 
+const MAX_ITERATIONS = 20;
+
 for (let i = 0; i < imageData.data.length; i += 4) {
-  imageData.data[i] = 0;
-  imageData.data[i + 1] = 0;
-  imageData.data[i + 2] = 0;
-  imageData.data[i + 3] = 255;
+  imageData.data[i] = 200;
+  imageData.data[i + 1] = 50;
+  imageData.data[i + 2] = 50;
+  imageData.data[i + 3] = 0;
 
   const index = i / 4;
   const col = index % $canvas.width;
@@ -37,18 +39,33 @@ for (let i = 0; i < imageData.data.length; i += 4) {
 
   let steps = 0;
   let z = C.new(0, 0);
-  for (steps = 0; steps < 20; steps++) {
-    z = C.add(C.square(z), c); // z^2 + c
 
-    const boundary = 1;
-    if (z.x > boundary || z.y > boundary) {
+  let escapes = false;
+  const zList = [];
+  for (steps = 0; steps < MAX_ITERATIONS; steps++) {
+    z = C.add(C.square(z), c);
+    zList.push(z);
+
+    const boundary = 2;
+    if (Math.abs(z.x) > boundary || Math.abs(z.y) > boundary) {
+      escapes = true;
       break;
     }
   }
 
-  if (steps > 15) {
-    imageData.data[i] = 200;
-    imageData.data[i + 2] = 200;
+  if (escapes) {
+    for (const z of zList) {
+      const row = Math.floor(z.y * scale.y + offset.y);
+      const col = Math.floor(z.x * scale.x + offset.x);
+
+      if (row > 0 && col > 0 && row < $canvas.height && col < $canvas.width) {
+        const idx = 4 * (row * $canvas.width + col);
+        imageData.data[idx + 3] += 40;
+      }
+    }
+  } else {
+    // imageData.data[i] = 200;
+    // imageData.data[i + 2] = 200;
   }
 }
 
