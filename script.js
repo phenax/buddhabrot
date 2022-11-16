@@ -16,21 +16,20 @@ const offset = {
   y: $canvas.height / 2,
 };
 
-const scale = Math.min($canvas.width, $canvas.height) / 2
+const scale = Math.min($canvas.width, $canvas.height) / 2;
 
 const MAX_ITERATIONS = 10000;
 
-const alphaChannelMap = new Map
-const getAlpha = (x, y) => alphaChannelMap.get(`${x}--${y}`) ?? 0
-const setAlpha = (x, y, a) => alphaChannelMap.set(`${x}--${y}`, a)
+const alphaChannelMap = new Map();
+const getAlpha = (x, y) => alphaChannelMap.get(`${x}--${y}`) ?? 0;
+const setAlpha = (x, y, a) => alphaChannelMap.set(`${x}--${y}`, a);
 
-const nextFrame = () => new Promise(res => requestAnimationFrame(res))
+const nextFrame = () => new Promise((res) => requestAnimationFrame(res));
 
 const run = async () => {
-  let pointsDrawn = 0
+  let pointsDrawn = 0;
 
-  const cols = $canvas.width*5/4
-  const rows = $canvas.width*5/4
+  const [cols, rows] = [$canvas.width, $canvas.height];
 
   for (let row = -100; row < rows; row++) {
     for (let col = -100; col < cols; col++) {
@@ -57,24 +56,25 @@ const run = async () => {
           const x = Math.floor(z.x * scale + offset.x);
 
           if (y > 0 && x > 0 && y < $canvas.height && x < $canvas.width) {
-            const alpha = Math.min(1, getAlpha(x, y) * 0.2 + 0.1)
+            const alpha = Math.min(1, getAlpha(x, y) * 0.2 + 0.1);
             const [r, g, b] =
-              i > MAX_ITERATIONS / 5 ? [200, 10, 10]
-                : i > MAX_ITERATIONS / 10 ? [200, 10, 100]
-                  : [10, 10, 200]
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`
-            ctx.fillRect(x, y, 1, 1)
-            setAlpha(y, x, alpha)
+              i > MAX_ITERATIONS / 8 ? [200, 10, 10]
+              : i > MAX_ITERATIONS / 16 ? [200, 200, 10]
+              : i > MAX_ITERATIONS / 20 ? [200, 10, 100]
+              : [10, 10, 200];
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            ctx.fillRect(x, y, 1, 1);
+            setAlpha(y, x, alpha);
           }
         }
       }
 
-      pointsDrawn++
+      pointsDrawn++;
       if (pointsDrawn % 1000 === 0) {
-        await nextFrame()
+        await nextFrame();
       }
     }
   }
-}
+};
 
-run()
+run();
