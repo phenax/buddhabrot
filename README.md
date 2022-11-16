@@ -9,5 +9,4 @@ Naive buddhabrot render on a canvas
 
 ## High res render
 
-![buddha-1920-1080](https://user-images.githubusercontent.com/11407672/202258579-9e11d7b7-8884-4dd8-877e-0131df561510.png)
-
+![buddha-1920-1080](https://user-images.githubusercontent.com/11407672/202260172-228c1130-d09f-4663-9376-cd4e0c0b6d60.png)
