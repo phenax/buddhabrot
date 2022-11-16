@@ -31,6 +31,9 @@ const run = async () => {
 
   const [cols, rows] = [$canvas.width, $canvas.height];
 
+  ctx.fillStyle = 'rgb(10, 10, 10)';
+  ctx.fillRect(0, 0, $canvas.width, $canvas.height);
+
   for (let row = -100; row < rows; row++) {
     for (let col = -100; col < cols; col++) {
       const c = C.new((col - offset.x) / scale, (row - offset.y) / scale);
